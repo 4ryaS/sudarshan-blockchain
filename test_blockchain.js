@@ -7,24 +7,29 @@ const my_blockchain = new Blockchain();
 // Create an instance of the smart contracts
 const my_contracts = new SmartContracts(my_blockchain);
 
-// Add some authorities (Placeholder for future expansion)
-my_contracts.add_authority('Government Office');
-my_contracts.add_authority('University');
+// Add authorities
+my_contracts.add_issuer('University');
+my_contracts.add_verifier('Government Office');
 
-// Issue a document
-console.log('Issuing Document 1...');
-my_contracts.issue_document('Document Content 1');
+// Try to issue a document with an unauthorized entity
+console.log('Attempting to issue document by "Fake Entity"...');
+my_contracts.issue_document('Fake Entity', 'Unauthorized Document Content');
 
-console.log('Issuing Document 2...');
-my_contracts.issue_document('Document Content 2');
+// Issue a document with an authorized entity
+console.log('Issuing document by "University"...');
+my_contracts.issue_document('University', 'Official Document Content 1');
 
-// Verify a document
-console.log('Verifying Document 1...');
-const is_verified = my_contracts.verify_document('Document Content 1');
+// Try to verify a document with an unauthorized entity
+console.log('Attempting to verify document by "Unauthorized Office"...');
+my_contracts.verify_document('Unauthorized Office', 'Official Document Content 1');
+
+// Verify a document with an authorized entity
+console.log('Verifying document by "Government Office"...');
+const is_verified = my_contracts.verify_document('Government Office', 'Official Document Content 1');
 console.log('Verification result: ' + is_verified);
+
+// Check if the blockchain is still valid
+console.log('Blockchain valid? ' + my_blockchain.is_chain_valid());
 
 // Print the blockchain
 console.log(JSON.stringify(my_blockchain, null, 4));
-
-// Validate the blockchain
-console.log("Is blockchain valid? " + my_blockchain.is_chain_valid());
