@@ -14,9 +14,13 @@ class Blockchain {
         return this.chain[this.chain.length - 1];
     }
 
-    add_block(new_block) {
-        new_block.previous_hash = this.get_latest_block().hash;
-        new_block.hash = new_block.calculate_hash();
+    add_block(document_content) {
+        const new_block = new Block(
+            this.chain.length,
+            Date.now(),
+            document_content,
+            this.get_latest_block().hash
+        );
         this.chain.push(new_block);
     }
 
