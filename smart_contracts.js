@@ -19,10 +19,26 @@ class SmartContracts {
         console.log(`${authority_name} is now authorized to verify documents.`);
     }
 
+    // // Document Issuance Contract with Access Control
+    // async issue_document(authority_name, document_content) {
+    //     if (this.authorized_issuers.includes(authority_name)) {
+    //         await this.blockchain.add_block(document_content);
+    //         console.log(`${authority_name} has issued a document.`);
+    //     } 
+    //     else {
+    //         console.log(`${authority_name} is not authorized to issue documents.`);
+    //     }
+    // }
+
     // Document Issuance Contract with Access Control
-    issue_document(authority_name, document_content) {
+    async issue_document(authority_name, document_content) {
         if (this.authorized_issuers.includes(authority_name)) {
-            this.blockchain.add_block(document_content);
+            // Ensure the blockchain is fully initialized
+            if (!this.blockchain.initialized) {
+                await this.blockchain.initialize_blockchain();
+            }
+
+            await this.blockchain.add_block(document_content);
             console.log(`${authority_name} has issued a document.`);
         } 
         else {
@@ -30,9 +46,37 @@ class SmartContracts {
         }
     }
 
+    // // Document Verification Contract with Access Control
+    // async verify_document(authority_name, document_content) {
+    //     if (this.authorized_verifiers.includes(authority_name)) {
+    //         const document_hashes = this.blockchain.chain.map(block => block.document_hash);
+    //         const input_document_hash = require('./utils').hash_document(document_content);
+
+    //         const is_valid = document_hashes.includes(input_document_hash);
+
+    //         if (is_valid) {
+    //             console.log(`${authority_name} has verified the document as valid.`);
+    //         } 
+    //         else {
+    //             console.log('Document is invalid or altered.');
+    //         }
+
+    //         return is_valid;
+    //     } 
+    //     else {
+    //         console.log(`${authority_name} is not authorized to verify documents.`);
+    //         return false;
+    //     }
+    // }
+
     // Document Verification Contract with Access Control
-    verify_document(authority_name, document_content) {
+    async verify_document(authority_name, document_content) {
         if (this.authorized_verifiers.includes(authority_name)) {
+            // Ensure the blockchain is fully initialized
+            if (!this.blockchain.initialized) {
+                await this.blockchain.initialize_blockchain();
+            }
+
             const document_hashes = this.blockchain.chain.map(block => block.document_hash);
             const input_document_hash = require('./utils').hash_document(document_content);
 

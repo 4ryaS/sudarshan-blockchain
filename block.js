@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { hash_document } = require('./utils');
+// const { hash_document } = require('./utils');
 
 class Block {
     constructor(index, timestamp, document_content, previous_hash = '') {
@@ -8,7 +8,8 @@ class Block {
         // when the block was created
         this.timestamp = timestamp;
         // the actual data (hash of the document and metadata)
-        this.document_hash = hash_document(document_content);
+        // this.document_hash = hash_document(document_content);
+        this.document_hash = document_content;
         // hash of the previous block
         this.previous_hash = previous_hash;
         // hash of the current block
