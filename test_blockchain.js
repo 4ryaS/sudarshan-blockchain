@@ -1,22 +1,30 @@
 const Blockchain = require('./blockchain');
-const Block = require('./block');
+const SmartContracts = require('./smart_contracts');
 
 // Create a new instance of the blockchain
 const my_blockchain = new Blockchain();
 
-// Add some blocks to the blockchain with document content
-console.log('Adding block 1...');
-my_blockchain.add_block('Document Content 1');
+// Create an instance of the smart contracts
+const my_contracts = new SmartContracts(my_blockchain);
 
-console.log('Adding block 2...');
-my_blockchain.add_block('Document Content 2');
+// Add some authorities (Placeholder for future expansion)
+my_contracts.add_authority('Government Office');
+my_contracts.add_authority('University');
 
-// Check if the blockchain is valid
-console.log('Blockchain valid? ' + my_blockchain.is_chain_valid());
+// Issue a document
+console.log('Issuing Document 1...');
+my_contracts.issue_document('Document Content 1');
+
+console.log('Issuing Document 2...');
+my_contracts.issue_document('Document Content 2');
+
+// Verify a document
+console.log('Verifying Document 1...');
+const is_verified = my_contracts.verify_document('Document Content 1');
+console.log('Verification result: ' + is_verified);
 
 // Print the blockchain
 console.log(JSON.stringify(my_blockchain, null, 4));
-
 
 // Validate the blockchain
 console.log("Is blockchain valid? " + my_blockchain.is_chain_valid());
