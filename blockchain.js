@@ -6,6 +6,8 @@ class Blockchain {
     constructor() {
         // Initialize chain with the Genesis Block
         this.chain = [];
+        // Set difficulty for PoW
+        this.difficulty = 0;
         this.initialize_blockchain();
     }
 
@@ -60,6 +62,8 @@ class Blockchain {
             hash_document(document_content),
             this.get_latest_block().hash
         );
+        // mine the block before adding
+        new_block.mine_block(this.difficulty);
         this.chain.push(new_block);
         await this.save_blockchain();
     }

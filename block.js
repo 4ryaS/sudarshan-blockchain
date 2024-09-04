@@ -12,6 +12,8 @@ class Block {
         this.document_hash = document_content;
         // hash of the previous block
         this.previous_hash = previous_hash;
+        // nonce for PoW
+        this.nonce = 0;
         // hash of the current block
         this.hash = this.calculate_hash();
 
@@ -20,8 +22,20 @@ class Block {
     calculate_hash() {
         // create a SHA-256 hash of the block's data
         return crypto.createHash('sha256').update(
-            this.index + this.previous_hash + this.timestamp + this.document_hash
+            this.index + this.previous_hash + this.timestamp + this.document_hash + this.nonce
         ).digest('hex');
+    }
+
+    mine_block(difficulty) {
+        console.log(this.hash);
+        while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+            // console.log(this.nonce);
+            // console.log(this.hash.substring(0, difficulty));
+            // console.log(Array(difficulty + 1).join("0"));
+            this.nonce++;
+            this.hash = this.calculate_hash();
+        }
+        console.log(`Block mined: ${this.hash}`);
     }
 }
 
