@@ -11,9 +11,10 @@ setTimeout(async () => {
 
     console.log('Issuing document by "University"...');
     await my_contracts.issue_document('University', 'Official Document Content 2');
+    await my_contracts.issue_document('University', 'Official Document Content 3');
 
     console.log('Verifying document by "Government Office"...');
-    const is_verified = await my_contracts.verify_document('Government Office', 'Official Document Content 1');
+    const is_verified = await my_contracts.verify_document('Government Office', 'Official Document Content 2');
     console.log('Verification result: ' + is_verified);
 
     console.log('Blockchain valid? ' + my_blockchain.is_chain_valid());

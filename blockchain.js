@@ -37,6 +37,12 @@ class Blockchain {
                     block_data.previous_hash
                 );
             });
+            
+            // Validate the chain after loading
+            if (!this.is_chain_valid()) {
+                throw new Error('Blockchain data is invalid');
+            }
+
             console.log('Blockchain loaded from the database.');
         }
         else {
@@ -64,8 +70,50 @@ class Blockchain {
         );
         // mine the block before adding
         new_block.mine_block(this.difficulty);
-        this.chain.push(new_block);
-        await this.save_blockchain();
+        
+        if (this.is_new_block_valid(new_block)) {
+            this.chain.push(new_block);
+            await this.save_blockchain();
+            console.log('Block added and blockchain updated.')
+        }
+        else {
+            throw new Error('New block is invalid and cannot be added to the chain.');
+        }
+    }
+
+    is_new_block_valid(new_block) {
+        const latest_block = this.get_latest_block();
+
+        if (new_block.previous_hash !== latest_block.hash) {
+            return false;
+        }
+        
+        if (new_block.hash !== new_block.calculate_hash()) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    // default interval is 60 seconds
+    validate_chain_periodically(interval = 60000) {
+        setInterval(() => {
+            if (!this.is_chain_valid()) {
+                console.error('Blockchain validation failed! Possible tampering detected.');
+            }
+            else {
+                console.log('Blockchain validation passed.')
+            }
+        }, interval);
+    }
+
+    async revalidate_chain() {
+        if (!this.is_chain_valid()) {
+            throw new Error('Blockchain is invalid after revalidation!');
+        }
+        else {
+            console.log('Blockchain revalidation passed.')
+        }
     }
 
     async save_blockchain() {
@@ -79,14 +127,35 @@ class Blockchain {
             const previous_block = this.chain[i - 1];
 
             if (current_block.hash !== current_block.calculate_hash()) {
+                console.log(`Block ${i} has an invalid hash.`);
                 return false;
             }
             
             if (current_block.previous_hash !== previous_block.hash) {
+                console.log(`Block ${i} has an invalid previous hash.`);
+                return false;
+            }
+
+            // Check if the block meets the PoW criteria
+            if (current_block.hash.substring(0, this.difficulty) !== Array(this.difficulty + 1).join("0")) {
+                console.log(`Block ${i} does not meet the PoW requirement.`);
                 return false;
             }
         }
 
+        return true;
+    }
+
+    // Additional method to check PoW for the entire chain
+    validate_pow() {
+        for (let i = 0; i < this.chain.length; i++) {
+            const block = this.chain[i];
+            if (block.hash.substring(0, this.difficulty) !== Array(this.difficulty + 1).join("0")) {
+                console.log(`Block ${i} does not meet the PoW requirement.`);
+                return false;
+            }
+        }
+        console.log("All blocks meet the PoW requirement.");
         return true;
     }
 }

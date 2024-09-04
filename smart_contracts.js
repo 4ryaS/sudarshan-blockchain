@@ -78,7 +78,9 @@ class SmartContracts {
             }
 
             const document_hashes = this.blockchain.chain.map(block => block.document_hash);
+            // console.log(document_hashes);
             const input_document_hash = require('./utils').hash_document(document_content);
+            // console.log(input_document_hash);
 
             const is_valid = document_hashes.includes(input_document_hash);
 
