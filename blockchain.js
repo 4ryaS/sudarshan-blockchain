@@ -79,6 +79,7 @@ class Blockchain {
         else {
             throw new Error('New block is invalid and cannot be added to the chain.');
         }
+        return new_block;
     }
 
     is_new_block_valid(new_block) {
