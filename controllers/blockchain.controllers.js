@@ -86,58 +86,99 @@ const verify_data = async (req, res) => {
 
 
 
-const calculate_verhoeff_check_digit = (num) => {
-    // Verhoeff's algorithm tables
-    const d = [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        [1, 0, 3, 2, 5, 4, 7, 6, 9, 8],
-        [2, 3, 0, 1, 6, 7, 4, 5, 8, 9],
-        [3, 2, 1, 0, 7, 6, 5, 4, 9, 8],
-        [4, 5, 6, 7, 0, 1, 2, 3, 8, 9],
-        [5, 4, 7, 6, 1, 0, 3, 2, 9, 8],
-        [6, 7, 4, 5, 2, 3, 0, 1, 9, 8],
-        [7, 6, 5, 4, 3, 2, 1, 0, 9, 8],
-        [8, 9, 8, 9, 8, 9, 8, 9, 8, 9],
-        [9, 8, 9, 8, 9, 8, 9, 8, 9, 8]
-    ];
+// const calculate_verhoeff_check_digit = (num) => {
+//     // Verhoeff's algorithm tables
+//     const d = [
+//         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+//         [1, 0, 3, 2, 5, 4, 7, 6, 9, 8],
+//         [2, 3, 0, 1, 6, 7, 4, 5, 8, 9],
+//         [3, 2, 1, 0, 7, 6, 5, 4, 9, 8],
+//         [4, 5, 6, 7, 0, 1, 2, 3, 8, 9],
+//         [5, 4, 7, 6, 1, 0, 3, 2, 9, 8],
+//         [6, 7, 4, 5, 2, 3, 0, 1, 9, 8],
+//         [7, 6, 5, 4, 3, 2, 1, 0, 9, 8],
+//         [8, 9, 8, 9, 8, 9, 8, 9, 8, 9],
+//         [9, 8, 9, 8, 9, 8, 9, 8, 9, 8]
+//     ];
 
-    const p = [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        [1, 5, 7, 3, 9, 2, 8, 4, 6, 0],
-        [2, 7, 8, 9, 5, 0, 3, 1, 4, 6],
-        [3, 8, 9, 0, 7, 1, 4, 2, 5, 6],
-        [4, 9, 0, 1, 8, 2, 5, 3, 6, 7],
-        [5, 0, 1, 2, 9, 3, 6, 4, 7, 8],
-        [6, 1, 2, 3, 0, 4, 7, 5, 8, 9],
-        [7, 2, 3, 4, 1, 5, 8, 6, 9, 0],
-        [8, 3, 4, 5, 2, 6, 9, 7, 0, 1],
-        [9, 4, 5, 6, 3, 7, 0, 8, 1, 2]
-    ];
+//     const p = [
+//         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+//         [1, 5, 7, 3, 9, 2, 8, 4, 6, 0],
+//         [2, 7, 8, 9, 5, 0, 3, 1, 4, 6],
+//         [3, 8, 9, 0, 7, 1, 4, 2, 5, 6],
+//         [4, 9, 0, 1, 8, 2, 5, 3, 6, 7],
+//         [5, 0, 1, 2, 9, 3, 6, 4, 7, 8],
+//         [6, 1, 2, 3, 0, 4, 7, 5, 8, 9],
+//         [7, 2, 3, 4, 1, 5, 8, 6, 9, 0],
+//         [8, 3, 4, 5, 2, 6, 9, 7, 0, 1],
+//         [9, 4, 5, 6, 3, 7, 0, 8, 1, 2]
+//     ];
 
-    const inv = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+//     const inv = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-    let c = 0;
-    num.split('').reverse().forEach((digit, i) => {
-        const digitValue = parseInt(digit, 10);
-        const index = (i % 8);
-        console.log(`Processing digit ${digitValue} at index ${i}, c = ${c}`);
-        c = d[c][p[index][digitValue]];
-        console.log(`Updated c = ${c}`);
-    });
-    console.log(`Final Check Digit: ${inv[c]}`);
-    return inv[c];
-};
+//     let c = 0;
+//     num.split('').reverse().forEach((digit, i) => {
+//         const digitValue = parseInt(digit, 10);
+//         const index = (i % 8);
+//         console.log(`Processing digit ${digitValue} at index ${i}, c = ${c}`);
+//         c = d[c][p[index][digitValue]];
+//         console.log(`Updated c = ${c}`);
+//     });
+//     console.log(`Final Check Digit: ${inv[c]}`);
+//     return inv[c];
+// };
+
+// const is_valid_aadhar = (aadhar_number) => {
+//     if (!/^\d{12}$/.test(aadhar_number)) {
+//         console.log('Invalid Aadhar Number Length');
+//         return false; // Aadhar number should be exactly 12 digits
+//     }
+//     const check_digit = aadhar_number.slice(-1);
+//     const number_without_check_digit = aadhar_number.slice(0, -1);
+//     const is_valid = calculate_verhoeff_check_digit(number_without_check_digit) === parseInt(check_digit, 10);
+//     console.log(`Aadhar Number: ${aadhar_number}, Check Digit: ${check_digit}, Valid: ${is_valid}`);
+//     return is_valid;
+// };
 
 const is_valid_aadhar = (aadhar_number) => {
-    if (!/^\d{12}$/.test(aadhar_number)) {
-        console.log('Invalid Aadhar Number Length');
-        return false; // Aadhar number should be exactly 12 digits
+    // multiplication table
+    const d = [
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 0, 6, 7, 8, 9, 5], 
+        [2, 3, 4, 0, 1, 7, 8, 9, 5, 6], 
+        [3, 4, 0, 1, 2, 8, 9, 5, 6, 7], 
+        [4, 0, 1, 2, 3, 9, 5, 6, 7, 8], 
+        [5, 9, 8, 7, 6, 0, 4, 3, 2, 1], 
+        [6, 5, 9, 8, 7, 1, 0, 4, 3, 2], 
+        [7, 6, 5, 9, 8, 2, 1, 0, 4, 3], 
+        [8, 7, 6, 5, 9, 3, 2, 1, 0, 4], 
+        [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    ];
+      
+    // permutation table
+    const p = [
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+        [1, 5, 7, 6, 2, 8, 3, 0, 9, 4], 
+        [5, 8, 0, 3, 7, 9, 6, 1, 4, 2], 
+        [8, 9, 1, 6, 0, 4, 3, 5, 2, 7], 
+        [9, 4, 5, 3, 1, 2, 6, 8, 7, 0], 
+        [4, 2, 8, 6, 5, 7, 3, 9, 0, 1], 
+        [2, 7, 9, 3, 8, 0, 6, 4, 1, 5], 
+        [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+    ];
+
+    if (typeof aadhar_number !== 'string' || aadhar_number.length !== 12 || !/^\d{12}$/.test(aadhar_number)) {
+        return false; // Invalid format
     }
-    const check_digit = aadhar_number.slice(-1);
-    const number_without_check_digit = aadhar_number.slice(0, -1);
-    const is_valid = calculate_verhoeff_check_digit(number_without_check_digit) === parseInt(check_digit, 10);
-    console.log(`Aadhar Number: ${aadhar_number}, Check Digit: ${check_digit}, Valid: ${is_valid}`);
-    return is_valid;
+
+    let c = 0;
+    let inverted_array = aadhar_number.split('').map(Number).reverse();
+
+    inverted_array.forEach((val, i) => {
+        c = d[c][p[(i % 8)][val]];
+    });
+
+    return (c === 0); // Checksum validation
 };
 
 module.exports = { 
